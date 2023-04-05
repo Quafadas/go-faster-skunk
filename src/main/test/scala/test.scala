@@ -1,14 +1,20 @@
 package gfSkunk
 
 import java.time.LocalDate
+import skunk.Codec
 
 class MySuite extends munit.FunSuite {
 
-  case class DeriveTest(anInt: Int, aString: String)
+  type Unknown = Seq[Int]
+
+  case class DeriveTest(anInt: Int)
 
   //type aTuple
 
   test("one row") {       
-    println(deriveCodec[DeriveTest])
+    val derived = deriveCodec[DeriveTest]
+    println(derived) 
+
+    assert( derived.isInstanceOf[Product1[Codec[String]]] )
   }  
 }
