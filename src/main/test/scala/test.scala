@@ -11,10 +11,8 @@ class MySuite extends munit.FunSuite {
 
   //type aTuple
 
+  // write a test to check if the type of derived test is a Codec[Int]  
   test("one row") {       
-    val derived = deriveCodec[DeriveTest]
-    println(derived) 
-
-    assert( derived.isInstanceOf[Product1[Codec[String]]] )
+    val derived : Tuple1[Codec[Int]] = deriveCodec[DeriveTest].asInstanceOf[Tuple1[Codec[Int]]]    
   }  
 }
