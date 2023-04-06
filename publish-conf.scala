@@ -16,3 +16,4 @@
 //> using platform "jvm"
 //> using platform "scala-js"
 //> using platform "scala-native"
+//> using options "-Xmax-inlines", "300"
