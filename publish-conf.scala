@@ -13,7 +13,6 @@
 //> using platform "scala-js"
 //> using platform "scala-native"
 //> using options "-Xmax-inlines", "300"
-//> using publish.ci.secretKey "env:PUBLISH_SECRET_KEY"
 //> using publish.ci.user "env:PUBLISH_USER"
 //> using publish.ci.password "env:PUBLISH_PASSWORD"
 //> using publish.ci.secretKey "env:PUBLISH_SECRET_KEY"
