@@ -103,6 +103,7 @@ object deriveCodec {
       case x :: xs => 
         xs.foldLeft(x)((a, b) => a *: b)
 
+  def unwrap2(l: List[Codec[_]]): Codec[_] = ???
     // l match {      
     //   case x :: Nil => x
     //   case (x: Codec[_]) :: xs => 
@@ -120,10 +121,10 @@ object deriveCodec {
     
     println("--------------------")
     //val asList = t.toList.asInstanceOf[List[Codec[_]]]
-    
-    val unwrapped = t.toList.asInstanceOf[List[Codec[_]]]
+    println(t)
+    val unwrapped = t.toList
     println(unwrapped)
-    val codec = unwrap(unwrapped)
+    val codec = unwrap(unwrapped.asInstanceOf[List[Codec[_]]])
     println(codec)
     println("--------------------")
     codec.asInstanceOf[t2]    

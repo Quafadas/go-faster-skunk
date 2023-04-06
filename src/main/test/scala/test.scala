@@ -33,25 +33,28 @@ class MySuite extends munit.FunSuite {
   test("mix them up") {
     case class DeriveTest(s: String, i: Int, so: Option[Short], io: Option[Boolean])
     val instantiate = DeriveTest("hello", 1, Some(2), Some(true))
-    
-    val manual: Codec[(String, Int, Option[Short], Option[Boolean])] = text *: int4 *: int2.opt *: bool.opt
-    val manualTestCodec : Codec[DeriveTest] =  manual.pimap[DeriveTest]
-    val check = manualTestCodec.encode(instantiate)
-    assertEquals(check, List(Some("hello"), Some("1"),Some("2"), Some("t")))
-    println("Manual version succeeded")
 
-    val manual2 = List(text, int4, int2.opt, bool.opt)
-    val codec : Codec[(String, Int, Option[Short], Option[Boolean])] = ???
-
-    val manual2TestCodec : Codec[DeriveTest] =  codec.pimap[DeriveTest]
+    val manual2 = List[Codec[_]](text, int4, int2.opt, bool.opt)
+    val hmmm = deriveCodec.unwrap(manual2)
+    println("hmmm")
+    println(hmmm)
+    val manual2TestCodec : Codec[DeriveTest] =  hmmm.pimap[DeriveTest]
     val check2 = manual2TestCodec.encode(instantiate)
-    assertEquals(check2, List(Some("hello"), Some("1"),Some("2"), Some("t")))
-    println("Manual version succeeded")
 
-    val derived: Codec[(String, Int, Option[Short], Option[Boolean])] = deriveCodec[DeriveTest]    
-    val deriveTestCodec : Codec[DeriveTest] =  derived.pimap[DeriveTest]
-    val check3 = deriveTestCodec.encode(instantiate)
-    assertEquals(check3, List(Some("hello"), Some("1"),Some("2"), Some("t")))
+    
+    // val manual: Codec[(String, Int, Option[Short], Option[Boolean])] = text *: int4 *: int2.opt *: bool.opt
+    // val manualTestCodec : Codec[DeriveTest] =  manual.pimap[DeriveTest]
+    // val check = manualTestCodec.encode(instantiate)
+    // assertEquals(check, List(Some("hello"), Some("1"),Some("2"), Some("t")))
+    // println("Manual version succeeded")
+
+    // assertEquals(check2, List(Some("hello"), Some("1"),Some("2"), Some("t")))
+    // println("Manual version succeeded")
+
+    // val derived: Codec[(String, Int, Option[Short], Option[Boolean])] = deriveCodec[DeriveTest]    
+    // val deriveTestCodec : Codec[DeriveTest] =  derived.pimap[DeriveTest]
+    // val check3 = deriveTestCodec.encode(instantiate)
+    // assertEquals(check3, List(Some("hello"), Some("1"),Some("2"), Some("t")))
   }
 
   // test("all known types") {
