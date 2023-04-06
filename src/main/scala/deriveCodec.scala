@@ -7,6 +7,7 @@ import scala.compiletime.summonInline
 import java.time.LocalDate
 import skunk.Codec
 import skunk.codec.all.*
+import skunk.syntax.codec.*
 import scala.collection.View.Empty
 import scala.deriving.Mirror
 import scala.quoted.*
@@ -96,27 +97,36 @@ object deriveCodec {
         (thisTpe *: caseClassTypes[ts])
   }
 
-  transparent inline def getCodecTypes[X] = {
-    type newType = X match
-      case Int => Codec[Int]
-      case Long => Codec[Long]
-      case BigDecimal => Codec[BigDecimal]
-      case Float => Codec[Float]
-      case Double => Codec[Double]
-      case String => Codec[String]
-      
-  }
+  def unwrap(l: List[Codec[_]]): Codec[_]= 
+    l match
+      case x :: Nil => x      
+      case x :: xs => 
+        xs.foldLeft(x)((a, b) => a *: b)
 
-  transparent inline def apply[A <: Product](using m: Mirror.Of[A])  = {
-    type s = m.MirroredElemTypes          
+    // l match {      
+    //   case x :: Nil => x
+    //   case (x: Codec[_]) :: xs => 
+    //     val h = unwrap(xs)
+    //     x *: h.head // Somehow, this line appears to be different
+      //case Nil => error("This really should not happen")
     
+  
+
+  transparent inline def apply[A <: Product](using m: Mirror.Of[A]) = {
+    type s = m.MirroredElemTypes              
+    //type t1 = Tuple.Map[s, Codec]
+    type t2 = Codec[s]    
     val t = caseClassTypes[s]
-    // val r = deriveCodecType[s]
-    // val bah = codeOf(deriveCodecType[s])
-    // println(r)
-    // println(bah)
-    // println(t)
-    t
+    
+    println("--------------------")
+    //val asList = t.toList.asInstanceOf[List[Codec[_]]]
+    
+    val unwrapped = t.toList.asInstanceOf[List[Codec[_]]]
+    println(unwrapped)
+    val codec = unwrap(unwrapped)
+    println(codec)
+    println("--------------------")
+    codec.asInstanceOf[t2]    
   }
 
 }
